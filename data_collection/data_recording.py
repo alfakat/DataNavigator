@@ -1,3 +1,8 @@
+'''
+Data recording is most easiest way to collect.
+The following script captures the clips from camera.
+'''
+
 import os
 import cv2
 import time
@@ -9,25 +14,28 @@ from tkinter import simpledialog
 
 def argument_parsing() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=str, required=True,
-                        help="Path where to save the output",
-                        default=os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                             f'{str(datetime.date.today())}_output'))
+
     parser.add_argument("--cam_index", type=int, required=True,
                         help="Path where to save the csv",
                         default=0)
     parser.add_argument("--video_length", type=int, required=True,
                         help="Output video length in seconds",
                         default=0)
+    parser.add_argument("--output", type=str, required=False,
+                        help="Path where to save the output",
+                        default=os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                             f'{str(datetime.date.today())}_rec_output'))
 
     args = parser.parse_args()
     return args
 
 
 def get_output_video_name() -> str:
+
     """Create a pop-up window to enter the output video name"""
+
     root = tk.Tk()
-    root.withdraw()  # Hide the root window
+    root.withdraw()
     directory_name = simpledialog.askstring("Output video name", "Enter the name for the output video:")
     return directory_name
 
@@ -42,7 +50,7 @@ def run_cap_video(cam_index: int, video_length: int, output: str):
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS)) or 30
 
-    cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("Camera", cv2.WINDOW_NORMAL)
 
     recording = False
     out = None
@@ -67,7 +75,7 @@ def run_cap_video(cam_index: int, video_length: int, output: str):
             cv2.circle(frame, (20, 20), 5, (255, 255, 255), -1)
 
 
-        cv2.imshow("frame", frame)
+        cv2.imshow("Camera", frame)
 
         key = cv2.waitKey(1)
         if key & 0xFF == ord('q'):
@@ -101,5 +109,4 @@ def run_cap_video(cam_index: int, video_length: int, output: str):
 if __name__ == '__main__':
     args = argument_parsing()
     run_cap_video(args.cam_index, args.video_length, args.output)
-
 
