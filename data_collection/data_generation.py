@@ -28,7 +28,7 @@ def argument_parsing() -> argparse.Namespace:
     return args
 
 
-def run_flux(prompt: str):
+def run_flux(prompt: str, output: str) -> tuple[str, np.array, str, int]:
 
     rand_seed = random.choice(range(100, 1001, 5))
 
@@ -44,7 +44,11 @@ def run_flux(prompt: str):
         max_sequence_length=512,
         generator=torch.Generator('cuda').manual_seed(rand_seed)
     ).images[0]
-    image.save(os.path.join("flux_out", f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_{rand_seed}.png"))
+
+    image_path = os.path.join(output, f"{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_{rand_seed}.png")
+    image.save(image_path)
+
+    return image_path, image, prompt, rand_seed
 
 
 if __name__ == '__main__':
@@ -52,6 +56,8 @@ if __name__ == '__main__':
     args = argument_parsing()
 
     prompt = args.prompt
+    output = args.output
 
     while True:
-        run_flux(prompt=prompt)
+        run_flux(prompt=prompt,
+                 output=output)
