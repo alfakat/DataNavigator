@@ -33,7 +33,7 @@ def collect_opencv_metadata(sourse: str) -> dict:
     opencv_metada['image_height'] = im_cv.shape[0]
     opencv_metada['image_width'] = im_cv.shape[1]
 
-    return opencv_metada
+    return opencv_metadata
 
 
 def collect_exif_metadata(sourse: str) -> dict:
@@ -50,9 +50,9 @@ def collect_exif_metadata(sourse: str) -> dict:
     return exif_metadata
 
 
-def write_metadata_to_json(opencv_metada: dict, exif_metadata: dict, output: str) -> None:
+def write_metadata_to_json(opencv_metadata: dict, exif_metadata: dict, output: str) -> None:
 
-    metadata = {**opencv_metada, **exif_metadata}
+    metadata = {**opencv_metadata, **exif_metadata}
 
     json_file_path = os.path.join(output, 'merged_data.json')
     with open(json_file_path, 'w') as json_file:
@@ -66,9 +66,9 @@ def run_metada_to_jsons(output: str):
                         video_length=10,
                         output=output)
 
-    opencv_metada = collect_opencv_metadata(sourse=source)
+    opencv_metadata = collect_opencv_metadata(sourse=source)
     exif_metadata = collect_exif_metadata(sourse=source)
-    write_metadata_to_json(opencv_metada, exif_metadata, output)
+    write_metadata_to_json(opencv_metadata, exif_metadata, output)
 
 
 if __name__ == '__main__':
